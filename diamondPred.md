@@ -1,19 +1,19 @@
-# Two-months-Salary
-#This project has the objective of building a model that predicts the price od a diamong ring based on the two month's Salary
+## Two-months-Salary
+##This project has the objective of building a model that predicts the price od a diamong ring based on the two month's Salary
 data set by Pope, B. (2006)
 
-# two_months_salary.r
-# Sample R program to begin work on the Two Month's Salary case study
-# to run the entire source code program type:  source("two_months_salary.r")  
-# read in data from comma-delimited text file
+## two_months_salary.r
+## Sample R program to begin work on the Two Month's Salary case study
+## to run the entire source code program type:  source("two_months_salary.r")  
+## read in data from comma-delimited text file
 getwd()
 setwd("C:/Users/Uduak/Dropbox/MSPA/454/Assignments/Week4/Two Months")
 diamonds <- read.csv("two_months_salary.csv")
 attach(diamonds)
 
 cat("\n","----- Initial Structure of diamonds data frame -----","\n")
-# examine the initial data frame
-#=======================================
+## examine the initial data frame
+##=======================================
 dim(diamonds)
 str(diamonds)
 anyNA(diamonds)
@@ -21,7 +21,7 @@ summary(diamonds)
 table(color)
 table(clarity)
 
-#data quality check using a Custom Summary Function for numeric variables
+##data quality check using a Custom Summary Function for numeric variables
 
 num.diamonds <- diamonds[,-c(2:6)]
 
@@ -29,8 +29,8 @@ my.summary <- function(in.df){
   
   VAR.NAME <- colnames(in.df);
   
-# Here we will embed the functions not.na() and count.na()
-# directly into the function my.summary().
+## Here we will embed the functions not.na() and count.na()
+## directly into the function my.summary().
   not.na <- function(x){
     out <- sum(-1*(is.na(x)-1));
     return(out);
@@ -44,7 +44,7 @@ my.summary <- function(in.df){
   
   IS.NA <- apply(X=in.df,MARGIN=2,FUN='count.na');
   PCT.NA <- IS.NA/(NOT.NA+IS.NA);
-  # Note that we need to account for computations with NA values;
+  ## Note that we need to account for computations with NA values;
   MIN <- apply(X=in.df,MARGIN=2,FUN='min',na.rm=TRUE);
   p <- c(0.01,0.05,0.25,0.50,0.75,0.95,0.99);
   Q <- apply(X=in.df,MARGIN=2,FUN='quantile',p,na.rm=TRUE);
@@ -63,21 +63,21 @@ my.summary <- function(in.df){
 my.summary(in.df = num.diamonds)
 diamondSummary <- write.csv(my.summary(in.df = num.diamonds),"diamondSummary.csv")
 
-# Check distribution of target variable: Price
+## Check distribution of target variable: Price
 require(lattice)
 histogram(~price, diamonds)
 densityplot(~price, diamonds)
 qqmath(~ price, data = diamonds)
-# Transform the response variable using log function 
-#to see if it becomes normlaized
+## Transform the response variable using log function 
+##to see if it becomes normlaized
 diamonds$logprice <- log(diamonds$price)
-# Check distribution of target variable:logprice
+## Check distribution of target variable:logprice
 histogram(~logprice, diamonds)
 densityplot(~logprice, diamonds)
 bwplot(~logprice, diamonds)
 qqmath(~ logprice, data = diamonds)
 
-# Check distribution of numerical predictors
+## Check distribution of numerical predictors
 histogram(~carat, diamonds)
 histogram(~log(carat), diamonds)
 densityplot(~carat, diamonds)
@@ -86,35 +86,35 @@ bwplot(~carat, diamonds)
 bwplot(~log(carat), diamonds)
 qqmath(~ carat, data = diamonds)
 
-# Check on categorical predictors
+## Check on categorical predictors
 table(color)
 table(clarity)
 table(cut)
 table(store)
 
-# # # we can create a new channel factor called internet as a binary indicator   
-# # # the ifelse() function is a good way to do this type of variable definition
-# # diamonds$internet <- ifelse((diamonds$channel == "Internet"),2,1)
-# # diamonds$internet <- factor(diamonds$internet,levels=c(1,2),labels=c("No","Yes"))
-# 
-# cat("\n","----- Checking the Definition of the internet factor -----","\n")
-# # check the definition of the internet factor
-# table(diamonds$channel,diamonds$internet)
+## ## ## we can create a new channel factor called internet as a binary indicator   
+## ## ## the ifelse() function is a good way to do this type of variable definition
+## ## diamonds$internet <- ifelse((diamonds$channel == "Internet"),2,1)
+## ## diamonds$internet <- factor(diamonds$internet,levels=c(1,2),labels=c("No","Yes"))
+## 
+## cat("\n","----- Checking the Definition of the internet factor -----","\n")
+## ## check the definition of the internet factor
+## table(diamonds$channel,diamonds$internet)
  
 
 cat("\n","----- Revised Structure of diamonds data frame -----","\n")
-# we check the structure of the diamonds data frame again
+## we check the structure of the diamonds data frame again
 str(diamonds)
 
-#Exploratory Data Analysis (EDA)
+##Exploratory Data Analysis (EDA)
 
-# Create data matrix to dichotomize all factor variables
+## Create data matrix to dichotomize all factor variables
 diamond.matrix <- model.matrix (~.-1,data=diamonds)
 diamond.frame <- data.frame(diamond.matrix)
 names(diamond.frame)
 str(diamond.frame)
 attach(diamond.frame)
-#Exploratory decision Tree (Regression)
+##Exploratory decision Tree (Regression)
 require(tree)
 ?tree
 summary(price)
@@ -125,7 +125,7 @@ plot(tree.diamonds)
 text(tree.diamonds,pretty = 0)
 tree.diamonds
 
-# Examining boxplots of decision tree variables
+## Examining boxplots of decision tree variables
 color.f <- factor(diamonds$color)
 clarity.f <- factor(diamonds$clarity)
 storeBlue.Nilef <- factor(storeBlue.Nile)
@@ -133,7 +133,7 @@ bwplot(price~color.f)
 bwplot(price~clarity.f)
 bwplot(price~storeBlue.Nilef)
 
-#Bin price for EDA purposes
+##Bin price for EDA purposes
 
 bins <- 4
 cutpoints <- quantile(price,(0:bins)/bins)
@@ -145,13 +145,13 @@ table(priceBin, color.f)
 table(priceBin, clarity.f)
 table(priceBin, storeBlue.Nilef)
 
-#Compare priceBin with Color.F, Clarity.F, Store - chi-square test
+##Compare priceBin with Color.F, Clarity.F, Store - chi-square test
 
 chisq.test(priceBin,color.f)
 chisq.test(priceBin,clarity.f)
 chisq.test(priceBin,storeBlue.Nilef)
                                                                       
-# Other Plots:
+## Other Plots:
 
 xyplot(price~carat, diamonds)
 abline
@@ -162,12 +162,12 @@ bwplot(logprice~channel, diamonds,xlab = "channel")
 bwplot(logprice~store, diamonds,xlab = "store")
 
 
-# let's prepare a graphical summary of the diamonds data
-# we note that price and carat are numeric variables with a strong relationship
-# also cut and channel are factor variables related to price
-# showing the relationship between price and carat, while conditioning
-# on cut and channel provides a convenient view of the diamonds data
-# in addition, we jitter to show all points in the data frame
+## let's prepare a graphical summary of the diamonds data
+## we note that price and carat are numeric variables with a strong relationship
+## also cut and channel are factor variables related to price
+## showing the relationship between price and carat, while conditioning
+## on cut and channel provides a convenient view of the diamonds data
+## in addition, we jitter to show all points in the data frame
 
 xyplot(jitter(price) ~ jitter(carat) | color.f, 
        data = diamond.frame,
@@ -194,13 +194,13 @@ xyplot(jitter(price) ~ jitter(carat) | storeBlue.Nilef,
        xlab = "Size or Weight of Diamond (carats)", 
        ylab = "Price")
 ?xyplot
- #Correlations
+ ##Correlations
 library(corrplot)
 M <- cor(diamond.frame)
 corrplot(M,method = "circle")
 
 
-#backward variable selection with price
+##backward variable selection with price
 require(leaps)
 regfit.bwd <- regsubsets(price~.-logprice,data=diamond.frame,nvmax=18,method="backward")
   bwd.summary <- summary(regfit.bwd)
@@ -219,14 +219,14 @@ regfit.bwd <- regsubsets(price~.-logprice,data=diamond.frame,nvmax=18,method="ba
   
   par(mfrow =c(1,1))
 
-#Displaying selected variables for the best based on optimal values of Cp, bic and AdjRsq
+##Displaying selected variables for the best based on optimal values of Cp, bic and AdjRsq
   
   plot(regfit.bwd,scale="Cp")
   plot(regfit.bwd,scale="bic")
   plot(regfit.bwd,scale="adjr2")
   coef(regfit.bwd,12)
 
-# Naive Regression Model
+## Naive Regression Model
 par(mfrow=c(2,2))
 fit <- lm(price~carat+color+clarity+cutIdeal+channelMall
           +storeAusmans+storeChalmers+storeDanford+storeGoodmans
@@ -240,7 +240,7 @@ fit1 <- lm(logprice~carat+color+clarity+cutIdeal+channelMall
 summary(fit1)
 plot(fit1)
 
-#log tranform of carat
+##log tranform of carat
 diamond.frame$logcarat <- log(diamond.frame$carat)
 
 fit2 <- lm(logprice~logcarat+color+clarity+cutIdeal+channelMall
@@ -251,31 +251,31 @@ plot(fit2)
 
 par(mfrow=c(1,1))
 
-# #Make predictions and calculate validation errors. Regsubsets has no predict method so we have to do some work to get what we need
-# val.errors <- rep(NA,18)
-# #options(error=NULL)
-# #options(error=recover)
-# x.test <- model.matrix(price~.-logprice,data = diamond.frame[-train,])
-# x.test
-# for (i in 1:18) {
-#   coefi <- coef(regfit.bwd,id=i)
-#   pred=x.test[,names(coefi)]%*%coefi
-#   val.errors[i]=mean((diamond.frame$price[-train]-pred)^2)
-# }
-# plot(sqrt(val.errors),ylab="Root MSE",pch=19,type="b")
-# points(sqrt(regfit.bwd$rss[-1]/128),col="blue",pch=19,type="b")
-# legend("topright",legend = c("Training","Validation"),col = c("blue","black"),pch = 19)
-# 
-# #Creating predict method for Regsubsets function
-# predict.regsubsets <- function(object,newdata,id,...){
-#   form=as.formula(object$call[[2]])
-#   mat=model.matrix(form,newdata)
-#   coefi=coef(object,id=id)
-#   mat[,names(coefi)]%*%coefi
-# }
+## ##Make predictions and calculate validation errors. Regsubsets has no predict method so we have to do some work to get what we need
+## val.errors <- rep(NA,18)
+## ##options(error=NULL)
+## ##options(error=recover)
+## x.test <- model.matrix(price~.-logprice,data = diamond.frame[-train,])
+## x.test
+## for (i in 1:18) {
+##   coefi <- coef(regfit.bwd,id=i)
+##   pred=x.test[,names(coefi)]%*%coefi
+##   val.errors[i]=mean((diamond.frame$price[-train]-pred)^2)
+## }
+## plot(sqrt(val.errors),ylab="Root MSE",pch=19,type="b")
+## points(sqrt(regfit.bwd$rss[-1]/128),col="blue",pch=19,type="b")
+## legend("topright",legend = c("Training","Validation"),col = c("blue","black"),pch = 19)
+## 
+## ##Creating predict method for Regsubsets function
+## predict.regsubsets <- function(object,newdata,id,...){
+##   form=as.formula(object$call[[2]])
+##   mat=model.matrix(form,newdata)
+##   coefi=coef(object,id=id)
+##   mat[,names(coefi)]%*%coefi
+## }
 
-#Other exploratory models
-# Forward stepwise variable selection
+##Other exploratory models
+## Forward stepwise variable selection
 library(ISLR)
 library(leaps)
 regfit.fwd <- regsubsets(logprice~.-price-carat,data=diamond.frame,nvmax=18,method="forward")
@@ -294,7 +294,7 @@ points (8,fwd.summary$bic[8], col ="red",cex =2, pch =20)
 
 par(mfrow =c(1,1))
 
-#Displaying selected variables for the best based on optimal values of Cp, bic and AdjRsq
+##Displaying selected variables for the best based on optimal values of Cp, bic and AdjRsq
 
 plot(regfit.fwd,scale="Cp")
 plot(regfit.fwd,scale="adjr2")
@@ -302,7 +302,7 @@ plot(regfit.fwd,scale="bic")
 coef(regfit.fwd,12)
 coef(regfit.fwd,8)
 
-#Regression Model using variables obtained from Fwd variable selection
+##Regression Model using variables obtained from Fwd variable selection
 fit.fwd1 <- lm(logprice~logcarat+color+clarity+cutIdeal+storeAusmans
                +storeBlue.Nile+storeFred.Meyer+storeGoodmans+storeKay
                +storeR..Holland+storeZales,
@@ -314,15 +314,15 @@ plot(fit.fwd1)
 
 par(mfrow=c(1,1))
 
-#Stepwise Variable Selection using AIC:
+##Stepwise Variable Selection using AIC:
 library(MASS)
 fit <- lm(logprice~.-price-carat,data=diamond.frame)
 step <- stepAIC(fit, direction="both")
-step$anova # display results
+step$anova ## display results
 step.summary <- summary(step)
 step.summary$adj.r.squared
 
-#Fitting linear regression models using LASSO variables
+##Fitting linear regression models using LASSO variables
 fit.step <- lm(logprice~color+clarity+cutIdeal+channelInternet
                 +storeAusmans+storeDanford+storeFred.Meyer
                 +storeGoodmans+storeKay+storeRiddles
@@ -332,7 +332,7 @@ par(mfrow=c(2,2))
 plot(fit.step)
 
 par(mfrow=c(1,1))
-#All subsets - Best Subsets
+##All subsets - Best Subsets
 regfit.full <- regsubsets(logprice~.-price-carat,data = diamond.frame)
 summary(regfit.full)
 regfit.full <- regsubsets(logprice~.-price-carat,data = diamond.frame,nvmax = 18)
@@ -347,14 +347,14 @@ points(12,reg.summary$adjr2[12],pch=20,col="red")
 plot(reg.summary$bic,xlab="Number of Variables",ylab="bic")
 which.min(reg.summary$bic)
 points(8,reg.summary$bic[8],pch=20,col="red")
-#Plots using regsubsets
+##Plots using regsubsets
 plot(regfit.full,scale="Cp")
 plot(regfit.full,scale="adjr2")
 plot(regfit.full,scale="bic")
 coef(regfit.full,12)
 coef(regfit.full,8)
 
-#Fitting linear regression models to all subsets
+##Fitting linear regression models to all subsets
 fit.all <- lm(logprice~logcarat+color+clarity+cutIdeal+channelMall
               +storeAusmans+storeBlue.Nile+storeFred.Meyer
               +storeGoodmans+storeKay+storeR..Holland
@@ -366,20 +366,20 @@ plot(fit.all)
 
 par(mfrow=c(1,1))
 
-# LASSO Variable Selection
+## LASSO Variable Selection
 library(glmnet)
 x <- model.matrix (logprice~.-price-carat,data=diamond.frame )
 write.csv(x,"x.csv")
 y <- diamond.frame$logprice
-#Lasso Model
+##Lasso Model
 fit.lasso <- glmnet(x,y)
 plot(fit.lasso,xvar="lambda",label=TRUE)
 cv.lasso <- cv.glmnet(x,y)
-#plot(fit.lasso,xvar="dev",label=TRUE)
+##plot(fit.lasso,xvar="dev",label=TRUE)
 plot(cv.lasso)
 coef(cv.lasso)
 
-#Fitting linear regression models using LASSO variables
+##Fitting linear regression models using LASSO variables
 fit.lasso <- lm(logprice~color+clarity+cutIdeal+channelInternet
                 +channelMall+storeFred.Meyer+storeGoodmans+storeKay
                 +storeRiddles+logcarat,data = diamond.frame)
@@ -388,9 +388,9 @@ par(mfrow=c(2,2))
 plot(fit.lasso)
 
 
-#Modeling Suite
-#=======================
-#Linear regression Model no interractions
+##Modeling Suite
+##=======================
+##Linear regression Model no interractions
 fit.Linear <- lm(logprice~logcarat+color+clarity+cutIdeal+channelMall
                  +storeFred.Meyer+storeGoodmans+storeKay,data = diamond.frame)
 summary(fit.Linear)
@@ -400,18 +400,18 @@ library(car)
 vif(fit.Linear)
 sqrt(vif(fit.Linear))>2
 
-#create training and test set (~70/30 split)
+##create training and test set (~70/30 split)
 set.seed(100)
 train <- sample(1:nrow(diamond.frame),297)
 trainset <- diamond.frame[train,]
 testset <- diamond.frame[-train,]
 
-#Prediction accuracy of linear model using training/test split:
+##Prediction accuracy of linear model using training/test split:
 linear.model <- lm(logprice~logcarat+color+clarity+cutIdeal+channelMall
                  +storeFred.Meyer+storeGoodmans
                  +storeKay,data = trainset)
 linear.model
-#Plots to check prediction quality
+##Plots to check prediction quality
 trainset$pred.train.linear <- predict(linear.model,trainset)
 ggplot(data=trainset,aes(x=pred.train.linear,
                          y=pred.train.linear-logprice))+
@@ -424,18 +424,18 @@ ggplot(data=testset,aes(x=pred.test.linear,
   geom_point(alpha=0.2,color="black")+
   geom_smooth(aes(x=pred.test.linear,y=pred.test.linear-logprice),color="black")
 
-#computing rsq of linear model
+##computing rsq of linear model
 rsq <- function(y,f){1-sum((y-f)^2)/sum((y-mean(y))^2)}
 rsq(trainset$logprice,predict(linear.model,newdata = trainset))
 rsq(testset$logprice,predict(linear.model,newdata = testset))
 
-#computing rmse of linear model
+##computing rmse of linear model
 rmse <- function(y,f){sqrt(mean(y-f)^2)}
 rmse(trainset$logprice,predict(linear.model,newdata = trainset))
 rmse(testset$logprice,predict(linear.model,newdata = testset))
 
 
-#Fitting non-linear terms and Interactions
+##Fitting non-linear terms and Interactions
 fit.inter <- lm(logprice~logcarat*color+logcarat*clarity+cutIdeal+channelMall
                  +storeFred.Meyer+storeGoodmans+storeKay,data = diamond.frame)
 summary(fit.inter)
@@ -443,11 +443,11 @@ plot(fit.inter)
 vif(fit.inter)
 sqrt(vif(fit.inter))>2
 
-#Prediction accuracy of linear model with interraction using training/test split:
+##Prediction accuracy of linear model with interraction using training/test split:
 fit.inter <- lm(logprice~logcarat*color+logcarat*clarity+cutIdeal+channelMall
                 +storeFred.Meyer+storeGoodmans+storeKay,data = trainset)
 fit.inter
-#Plots to check prediction quality
+##Plots to check prediction quality
 trainset$pred.inter.train <- predict(fit.inter,trainset)
 ggplot(data=trainset,aes(x=pred.inter.train,
                          y=pred.inter.train-logprice))+
@@ -460,18 +460,18 @@ ggplot(data=testset,aes(x=pred.inter.test,
   geom_point(alpha=0.2,color="black")+
   geom_smooth(aes(x=pred.inter.test,y=pred.inter.test-logprice),color="black")
 
-#computing rsq of interraction model
+##computing rsq of interraction model
 rsq <- function(y,f){1-sum((y-f)^2)/sum((y-mean(y))^2)}
 rsq(trainset$logprice,predict(fit.inter,newdata = trainset))
 rsq(testset$logprice,predict(fit.inter,newdata = testset))
 
-#computing rmse of interraction model
+##computing rmse of interraction model
 rmse <- function(y,f){sqrt(mean(y-f)^2)}
 rmse(trainset$logprice,predict(fit.inter,newdata = trainset))
 rmse(testset$logprice,predict(fit.inter,newdata = testset))
 
 
-#Tree Model
+##Tree Model
 require(tree)
 tree.diamonds <- tree(logprice~logcarat+color+clarity+cutIdeal
                       +channelMall+storeFred.Meyer+storeGoodmans
@@ -482,13 +482,13 @@ plot(tree.diamonds)
 text(tree.diamonds,pretty = 0)
 tree.diamonds
 
-#Prediction accuracy of tree model using training/test split:
+##Prediction accuracy of tree model using training/test split:
 tree.diamonds <- tree(logprice~logcarat+color+clarity+cutIdeal
                       +channelMall+storeFred.Meyer+storeGoodmans
                       +storeKay,data = trainset)
 tree.diamonds
 
-#Plots to check prediction quality
+##Plots to check prediction quality
 trainset$pred.tree.train <- predict(tree.diamonds,trainset)
 ggplot(data=trainset,aes(x=pred.tree.train,y=logprice))+
   geom_point(alpha=0.2,color="black")+
@@ -501,17 +501,17 @@ ggplot(data=testset,aes(x=pred.tree.test,y=logprice))+
   geom_smooth(aes(x=pred.tree.test,y=logprice),color="black")+
   geom_line(aes(x=logprice,y=logprice),color="blue",linetype=2)
 
-#computing rsq for tree model
+##computing rsq for tree model
 rsq <- function(y,f){1-sum((y-f)^2)/sum((y-mean(y))^2)}
 rsq(trainset$logprice,predict(tree.diamonds,newdata = trainset))
 rsq(testset$logprice,predict(tree.diamonds,newdata = testset))
 
-#computing rmse for tree model
+##computing rmse for tree model
 rmse <- function(y,f){sqrt(mean(y-f)^2)}
 rmse(trainset$logprice,predict(tree.diamonds,newdata = trainset))
 rmse(testset$logprice,predict(tree.diamonds,newdata = testset))
 
-#Random Forest
+##Random Forest
 require(randomForest)
 set.seed(101)
 rf.diamond=randomForest(logprice~logcarat+color+clarity+cutIdeal
@@ -522,13 +522,13 @@ rf.diamond$importance
 varImpPlot(rf.diamond)
 par(mfrow=c(1,1))
 
-#Prediction accuracy of random forest model using training/test split:
+##Prediction accuracy of random forest model using training/test split:
 rf.diamond=randomForest(logprice~logcarat+color+clarity+cutIdeal
                         +channelMall+storeFred.Meyer+storeGoodmans
                         +storeKay,data = trainset)
 
 rf.diamond
-#Plots to check prediction quality
+##Plots to check prediction quality
 trainset$pred.rf.train <- predict(rf.diamond,trainset)
 ggplot(data=trainset,aes(x=pred.rf.train,y=logprice))+
   geom_point(alpha=0.2,color="black")+
@@ -541,12 +541,12 @@ ggplot(data=testset,aes(x=pred.rf.test,y=logprice))+
   geom_smooth(aes(x=pred.rf.test,y=logprice),color="black")+
   geom_line(aes(x=logprice,y=logprice),color="blue",linetype=2)
 
-#computing rsq for the  Random Forest model
+##computing rsq for the  Random Forest model
 rsq <- function(y,f){1-sum((y-f)^2)/sum((y-mean(y))^2)}
 rsq(trainset$logprice,predict(rf.diamond,newdata = trainset))
 rsq(testset$logprice,predict(rf.diamond,newdata = testset))
 
-#computing rmse for the Random Forest  model
+##computing rmse for the Random Forest  model
 rmse <- function(y,f){sqrt(mean(y-f)^2)}
 rmse(trainset$logprice,predict(rf.diamond,newdata = trainset))
 rmse(testset$logprice,predict(rf.diamond,newdata = testset))
